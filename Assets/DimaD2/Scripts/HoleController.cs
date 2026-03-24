@@ -38,6 +38,11 @@ namespace DimaD2
         public void SetGameplayEnabled(bool isEnabled)
         {
             gameplayEnabled = isEnabled;
+
+            if (!gameplayEnabled)
+            {
+                holeSizeSystem?.StopFeedback();
+            }
         }
 
         private void Update()
@@ -76,15 +81,22 @@ namespace DimaD2
                 return;
             }
 
+            if (!absorbableItem.IsAvailableForAbsorb)
+            {
+                return;
+            }
+
             if (absorbableItem.CanBeAbsorbedBy(currentSize))
             {
                 Debug.Log($"[HoleController] Absorbed '{absorbableItem.gameObject.name}' (itemSize={absorbableItem.ItemSize:0.##}, holeSize={currentSize:0.##})", absorbableItem.gameObject);
-                absorbableItem.Absorb();
+                holeSizeSystem?.PlayAbsorbFeedback();
+                absorbableItem.Absorb(transform);
                 holeSizeSystem?.AddProgress(absorbableItem.ItemSize);
                 objectiveSystem?.RegisterAbsorb(absorbableItem.ItemType);
                 return;
             }
 
+            holeSizeSystem?.PlayBlockedFeedback();
             Debug.Log($"[HoleController] '{absorbableItem.gameObject.name}' is too large to absorb (itemSize={absorbableItem.ItemSize:0.##}, holeSize={currentSize:0.##})", absorbableItem.gameObject);
         }
 

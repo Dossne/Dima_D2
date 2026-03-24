@@ -28,6 +28,31 @@ namespace DimaD2
             ResetSystem();
         }
 
+        public void Configure(IEnumerable<ObjectiveEntry> configuredObjectives)
+        {
+            objectives = new List<ObjectiveEntry>();
+
+            if (configuredObjectives == null)
+            {
+                return;
+            }
+
+            foreach (ObjectiveEntry entry in configuredObjectives)
+            {
+                if (entry == null)
+                {
+                    continue;
+                }
+
+                objectives.Add(new ObjectiveEntry
+                {
+                    itemType = entry.itemType,
+                    requiredCount = entry.requiredCount,
+                    currentCount = 0
+                });
+            }
+        }
+
         public void RegisterAbsorb(string itemType)
         {
             if (completed || string.IsNullOrEmpty(itemType))
