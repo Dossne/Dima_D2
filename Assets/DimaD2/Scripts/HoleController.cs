@@ -8,6 +8,9 @@ namespace DimaD2
         [SerializeField] private float moveSpeed = 8f;
         [SerializeField] private float touchSensitivity = 12f;
 
+        [Header("Absorption")]
+        [SerializeField] private float currentSize = 1f;
+
         [Header("Bounds")]
         [SerializeField] private bool clampToPlayArea = true;
         [SerializeField] private Vector2 playAreaExtents = new Vector2(13.5f, 13.5f);
@@ -29,18 +32,32 @@ namespace DimaD2
             transform.position = nextPosition;
         }
 
-        private Vector2 ReadMovementInput()
+        private void OnTriggerEnter(Collider other)
         {
-            Vector2 axisInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            AbsorbableItem absorbableItem = other.GetComponent<AbsorbableItem>();
 
-            if (axisInput.sqrMagnitude > 1f)
+            if (absorbableItem == null || !absorbableItem.gameObject.activeInHierarchy)
             {
-                axisInput.Normalize();
+                return;
             }
 
-            if (axisInput.sqrMagnitude > 0.0001f)
+            if (absorbableItem.CanBeAbsorbedBy(currentSize))
             {
-                return axisInput;
+                Debug.Log($"[HoleController] Absorbed '{absorbableItem.gameObject.name}' (itemSize={absorbableItem.ItemSize:0.##}, holeSize={currentSize:0.##})", absorbableItem.gameObject);
+                absorbableItem.Absorb();
+                return;
+            }
+
+            Debug.Log($"[HoleController] '{absorbableItem.gameObject.name}' is too large to absorb (itemSize={absorbableItem.ItemSize:0.##}, holeSize={currentSize:0.##})", absorbableItem.gameObject);
+        }
+
+        private Vector2 ReadMovementInput()
+        {
+            Vector2 keyboardInput = ReadKeyboardInput();
+
+            if (keyboardInput.sqrMagnitude > 0f)
+            {
+                return keyboardInput;
             }
 
             if (Input.touchCount == 0)
@@ -60,6 +77,35 @@ namespace DimaD2
             Vector2 touchInput = normalizedDelta * touchSensitivity;
 
             return Vector2.ClampMagnitude(touchInput, 1f);
+        }
+
+        private static Vector2 ReadKeyboardInput()
+        {
+            float horizontal = 0f;
+            float vertical = 0f;
+
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                horizontal -= 1f;
+            }
+
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                horizontal += 1f;
+            }
+
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            {
+                vertical -= 1f;
+            }
+
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            {
+                vertical += 1f;
+            }
+
+            Vector2 input = new Vector2(horizontal, vertical);
+            return input.sqrMagnitude > 1f ? input.normalized : input;
         }
 
         private void OnDrawGizmosSelected()

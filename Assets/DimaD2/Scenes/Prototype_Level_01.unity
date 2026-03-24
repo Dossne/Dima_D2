@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!29 &1
 OcclusionCullingSettings:
@@ -225,13 +225,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100100001}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 1, z: 3}
+  m_LocalScale: {x: 50, y: 50, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &100200001
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,6 +245,7 @@ GameObject:
   - component: {fileID: 100200004}
   - component: {fileID: 100200002}
   - component: {fileID: 100200006}
+  - component: {fileID: 100200007}
   m_Layer: 0
   m_Name: HolePlaceholder
   m_TagString: Untagged
@@ -357,10 +358,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79e324c0a654951ae0695d8e50d08b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 8
-  touchSensitivity: 12
-  clampToPlayArea: 1
-  playAreaExtents: {x: 13.5, y: 13.5}
+--- !u!54 &100200007
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100200001}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &100300001
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,6 +397,7 @@ GameObject:
   - component: {fileID: 100300003}
   - component: {fileID: 100300004}
   - component: {fileID: 100300002}
+  - component: {fileID: 100300006}
   m_Layer: 0
   m_Name: TestObject_Cube_A
   m_TagString: Untagged
@@ -467,12 +492,26 @@ Transform:
   m_GameObject: {fileID: 100300001}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.5, y: 0.5, z: 2}
+  m_LocalPosition: {x: -6, y: 0.5, z: 5}
   m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &100300006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100300001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f72fe9dc5984e3d9537936599f45daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSize: 0.5
+  deactivateOnAbsorb: 1
 --- !u!1 &100400001
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,6 +524,7 @@ GameObject:
   - component: {fileID: 100400003}
   - component: {fileID: 100400004}
   - component: {fileID: 100400002}
+  - component: {fileID: 100400006}
   m_Layer: 0
   m_Name: TestObject_Cube_B
   m_TagString: Untagged
@@ -579,12 +619,26 @@ Transform:
   m_GameObject: {fileID: 100400001}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 0.5, z: 1}
+  m_LocalPosition: {x: 7, y: 0.5, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 25, z: 0}
+--- !u!114 &100400006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100400001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f72fe9dc5984e3d9537936599f45daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSize: 1.75
+  deactivateOnAbsorb: 1
 --- !u!1 &100500001
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,6 +651,7 @@ GameObject:
   - component: {fileID: 100500003}
   - component: {fileID: 100500004}
   - component: {fileID: 100500002}
+  - component: {fileID: 100500006}
   m_Layer: 0
   m_Name: TestObject_Cube_C
   m_TagString: Untagged
@@ -691,12 +746,26 @@ Transform:
   m_GameObject: {fileID: 100500001}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: -2.75}
+  m_LocalPosition: {x: 0, y: 0.5, z: -8}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &100500006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100500001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f72fe9dc5984e3d9537936599f45daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSize: 1
+  deactivateOnAbsorb: 1
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,7 +778,6 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
-  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -835,21 +903,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &330585548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac2be7725d294d09aa3fe95aa7d98f93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 100200005}
-  offset: {x: 0, y: 14, z: 0}
-  smoothTime: 0.12
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,7 +1041,3 @@ SceneRoots:
   - {fileID: 100300005}
   - {fileID: 100400005}
   - {fileID: 100500005}
-
-
-
-
