@@ -17,6 +17,7 @@ namespace DimaD2
 
         private HoleSizeSystem holeSizeSystem;
         private ObjectiveSystem objectiveSystem;
+        private bool gameplayEnabled = true;
 
         private void Awake()
         {
@@ -26,6 +27,7 @@ namespace DimaD2
         private void Start()
         {
             objectiveSystem = FindObjectOfType<ObjectiveSystem>();
+            gameplayEnabled = true;
         }
 
         public void SetSize(float newSize)
@@ -33,8 +35,18 @@ namespace DimaD2
             currentSize = newSize;
         }
 
+        public void SetGameplayEnabled(bool isEnabled)
+        {
+            gameplayEnabled = isEnabled;
+        }
+
         private void Update()
         {
+            if (!gameplayEnabled)
+            {
+                return;
+            }
+
             Vector2 input = ReadMovementInput();
             Vector3 movement = new Vector3(input.x, 0f, input.y) * (moveSpeed * Time.deltaTime);
 
@@ -52,6 +64,11 @@ namespace DimaD2
 
         private void OnTriggerEnter(Collider other)
         {
+            if (!gameplayEnabled)
+            {
+                return;
+            }
+
             AbsorbableItem absorbableItem = other.GetComponent<AbsorbableItem>();
 
             if (absorbableItem == null || !absorbableItem.gameObject.activeInHierarchy)
