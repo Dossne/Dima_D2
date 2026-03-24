@@ -15,6 +15,24 @@ namespace DimaD2
         [SerializeField] private bool clampToPlayArea = true;
         [SerializeField] private Vector2 playAreaExtents = new Vector2(13.5f, 13.5f);
 
+        private HoleSizeSystem holeSizeSystem;
+        private ObjectiveSystem objectiveSystem;
+
+        private void Awake()
+        {
+            holeSizeSystem = GetComponent<HoleSizeSystem>();
+        }
+
+        private void Start()
+        {
+            objectiveSystem = FindObjectOfType<ObjectiveSystem>();
+        }
+
+        public void SetSize(float newSize)
+        {
+            currentSize = newSize;
+        }
+
         private void Update()
         {
             Vector2 input = ReadMovementInput();
@@ -45,6 +63,8 @@ namespace DimaD2
             {
                 Debug.Log($"[HoleController] Absorbed '{absorbableItem.gameObject.name}' (itemSize={absorbableItem.ItemSize:0.##}, holeSize={currentSize:0.##})", absorbableItem.gameObject);
                 absorbableItem.Absorb();
+                holeSizeSystem?.AddProgress(absorbableItem.ItemSize);
+                objectiveSystem?.RegisterAbsorb(absorbableItem.ItemType);
                 return;
             }
 
