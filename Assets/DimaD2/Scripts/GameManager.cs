@@ -47,6 +47,7 @@ namespace DimaD2
         {
             if (State != GameState.Playing) return;
             State = GameState.Fail;
+            Time.timeScale = 0f;
             Debug.Log("[GameManager] Time's up! FAIL.");
         }
 
@@ -55,11 +56,29 @@ namespace DimaD2
             if (State != GameState.Playing) return;
             State = GameState.Win;
             levelTimer?.Stop();
+            Time.timeScale = 0f;
             Debug.Log("[GameManager] All objectives complete! WIN.");
+        }
+
+        private void OnGUI()
+        {
+            if (State == GameState.Playing) return;
+
+            GUIStyle style = new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 72,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter
+            };
+            style.normal.textColor = State == GameState.Win ? Color.green : Color.red;
+
+            GUI.Label(new Rect(0, 0, Screen.width, Screen.height),
+                State == GameState.Win ? "WIN" : "FAIL", style);
         }
 
         public void RestartLevel()
         {
+            Time.timeScale = 1f;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }

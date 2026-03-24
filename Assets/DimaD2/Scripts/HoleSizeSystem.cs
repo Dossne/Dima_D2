@@ -45,6 +45,8 @@ namespace DimaD2
             if (sphereCollider != null)
                 sphereCollider.radius = newSize;
 
+            transform.localScale = Vector3.one * newSize;
+
             Debug.Log($"[HoleSizeSystem] Level up → SizeLevel={SizeLevel}, holeSize={newSize:0.##}");
         }
 
