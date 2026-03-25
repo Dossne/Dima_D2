@@ -10,6 +10,10 @@ namespace DimaD2
 
         [Header("Absorption")]
         [SerializeField] private float currentSize = 1f;
+        [SerializeField] private AudioSource absorbAudioSource;
+        [SerializeField] private AudioClip absorbClip;
+        [SerializeField] [Range(0f, 1f)] private float absorbVolume = 0.85f;
+        [SerializeField] private string absorbClipResourcePath = "Audio/AbsorbSuction";
 
         [Header("Bounds")]
         [SerializeField] private bool clampToPlayArea = true;
@@ -17,16 +21,35 @@ namespace DimaD2
 
         private HoleSizeSystem holeSizeSystem;
         private ObjectiveSystem objectiveSystem;
+        private TouchJoystickUI touchJoystickUI;
         private bool gameplayEnabled = true;
+        private bool joystickMovementLogged;
 
         private void Awake()
         {
             holeSizeSystem = GetComponent<HoleSizeSystem>();
+            absorbAudioSource = absorbAudioSource != null ? absorbAudioSource : GetComponent<AudioSource>();
+
+            if (absorbAudioSource == null)
+            {
+                absorbAudioSource = gameObject.AddComponent<AudioSource>();
+            }
+
+            absorbAudioSource.playOnAwake = false;
+            absorbAudioSource.loop = false;
+            absorbAudioSource.spatialBlend = 0f;
+            absorbAudioSource.volume = absorbVolume;
+
+            if (absorbClip == null && !string.IsNullOrWhiteSpace(absorbClipResourcePath))
+            {
+                absorbClip = Resources.Load<AudioClip>(absorbClipResourcePath);
+            }
         }
 
         private void Start()
         {
             objectiveSystem = FindObjectOfType<ObjectiveSystem>();
+            touchJoystickUI = FindObjectOfType<TouchJoystickUI>();
             gameplayEnabled = true;
         }
 
@@ -38,6 +61,7 @@ namespace DimaD2
         public void SetGameplayEnabled(bool isEnabled)
         {
             gameplayEnabled = isEnabled;
+            joystickMovementLogged = false;
 
             if (!gameplayEnabled)
             {
@@ -89,6 +113,7 @@ namespace DimaD2
             if (absorbableItem.CanBeAbsorbedBy(currentSize))
             {
                 Debug.Log($"[HoleController] Absorbed '{absorbableItem.gameObject.name}' (itemSize={absorbableItem.ItemSize:0.##}, holeSize={currentSize:0.##})", absorbableItem.gameObject);
+                PlayAbsorbSound();
                 holeSizeSystem?.PlayAbsorbFeedback();
                 absorbableItem.Absorb(transform);
                 holeSizeSystem?.AddProgress(absorbableItem.ItemSize);
@@ -103,29 +128,55 @@ namespace DimaD2
         private Vector2 ReadMovementInput()
         {
             Vector2 keyboardInput = ReadKeyboardInput();
-
             if (keyboardInput.sqrMagnitude > 0f)
             {
+                joystickMovementLogged = false;
                 return keyboardInput;
             }
 
-            if (Input.touchCount == 0)
+            if (touchJoystickUI == null)
             {
-                return Vector2.zero;
+                touchJoystickUI = FindObjectOfType<TouchJoystickUI>();
             }
 
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase != TouchPhase.Moved && touch.phase != TouchPhase.Stationary)
+            if (touchJoystickUI != null)
             {
-                return Vector2.zero;
+                Vector2 joystickInput = Vector2.ClampMagnitude(touchJoystickUI.CurrentInput, 1f);
+
+                if (joystickInput.sqrMagnitude > 0.0001f)
+                {
+                    if (!joystickMovementLogged)
+                    {
+                        Debug.Log($"[HoleController] Reading joystick movement vector {joystickInput}.", gameObject);
+                        joystickMovementLogged = true;
+                    }
+                }
+                else
+                {
+                    joystickMovementLogged = false;
+                }
+
+                return joystickInput;
             }
 
-            float screenScale = Mathf.Max(1f, Mathf.Min(Screen.width, Screen.height));
-            Vector2 normalizedDelta = touch.deltaPosition / screenScale;
-            Vector2 touchInput = normalizedDelta * touchSensitivity;
+            joystickMovementLogged = false;
+            return Vector2.zero;
+        }
 
-            return Vector2.ClampMagnitude(touchInput, 1f);
+        private void PlayAbsorbSound()
+        {
+            if (absorbClip == null && !string.IsNullOrWhiteSpace(absorbClipResourcePath))
+            {
+                absorbClip = Resources.Load<AudioClip>(absorbClipResourcePath);
+            }
+
+            if (absorbAudioSource == null || absorbClip == null)
+            {
+                return;
+            }
+
+            absorbAudioSource.volume = absorbVolume;
+            absorbAudioSource.PlayOneShot(absorbClip, absorbVolume);
         }
 
         private static Vector2 ReadKeyboardInput()

@@ -13,6 +13,12 @@ namespace DimaD2
             RestartCurrentScene();
         }
 
+        public void OnNextLevelButtonClicked()
+        {
+            Debug.Log("[RestartLevelHandler] Next Level button clicked. Reloading current prototype scene for hackathon flow.", gameObject);
+            RestartCurrentScene();
+        }
+
         public void OnExitToMainMenuClicked()
         {
             Debug.Log("[RestartLevelHandler] Exit to main menu clicked.", gameObject);
@@ -29,6 +35,7 @@ namespace DimaD2
 
             Debug.Log("[RestartLevelHandler] RestartCurrentScene called.", gameObject);
             restarting = true;
+            Time.timeScale = 1f;
 
             Scene activeScene = SceneManager.GetActiveScene();
             Debug.Log($"[RestartLevelHandler] Scene reload requested for '{activeScene.name}'.", gameObject);
@@ -46,6 +53,7 @@ namespace DimaD2
             Scene activeScene = SceneManager.GetActiveScene();
             Debug.Log($"[RestartLevelHandler] Returning to pre-start state by reloading '{activeScene.name}'.", gameObject);
             restarting = true;
+            Time.timeScale = 1f;
             SceneManager.LoadScene(activeScene.name);
         }
     }

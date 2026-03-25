@@ -16,6 +16,12 @@ namespace DimaD2
                 gameStateSystem = FindObjectOfType<GameStateSystem>();
             }
 
+            if (victoryPanel == null)
+            {
+                Transform victoryPanelTransform = transform.Find("VictoryPanel");
+                victoryPanel = victoryPanelTransform != null ? victoryPanelTransform.gameObject : null;
+            }
+
             HideVictory();
         }
 
@@ -67,6 +73,11 @@ namespace DimaD2
             if (victoryPanel != null)
             {
                 victoryPanel.SetActive(true);
+                Debug.Log("[VictoryUI] Victory panel shown.", victoryPanel);
+            }
+            else
+            {
+                Debug.LogWarning("[VictoryUI] Win triggered but no VictoryPanel reference is available.", gameObject);
             }
         }
     }

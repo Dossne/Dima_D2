@@ -16,6 +16,20 @@ namespace DimaD2
 
         private void Awake()
         {
+            Time.timeScale = 1f;
+
+            if (pauseButton == null)
+            {
+                Transform pauseButtonTransform = transform.Find("PauseButton");
+                pauseButton = pauseButtonTransform != null ? pauseButtonTransform.gameObject : null;
+            }
+
+            if (pausePanel == null)
+            {
+                Transform pausePanelTransform = transform.Find("PausePanel");
+                pausePanel = pausePanelTransform != null ? pausePanelTransform.gameObject : null;
+            }
+
             if (holeController == null)
             {
                 holeController = FindObjectOfType<HoleController>();
@@ -61,6 +75,8 @@ namespace DimaD2
 
         private void OnDisable()
         {
+            Time.timeScale = 1f;
+
             if (startPanelUI != null)
             {
                 startPanelUI.OnSessionStarted -= HandleSessionStarted;
@@ -81,6 +97,7 @@ namespace DimaD2
             }
 
             paused = true;
+            Time.timeScale = 0f;
             holeController?.SetGameplayEnabled(false);
             timerSystem?.PauseCountdown();
             SetPausePanelVisible(true);
@@ -96,6 +113,7 @@ namespace DimaD2
             }
 
             paused = false;
+            Time.timeScale = 1f;
             SetPausePanelVisible(false);
 
             if (!HasEnded() && startPanelUI != null && startPanelUI.SessionStarted)
@@ -122,6 +140,7 @@ namespace DimaD2
         private void HandleSessionStarted()
         {
             paused = false;
+            Time.timeScale = 1f;
             SetPausePanelVisible(false);
             SetPauseButtonVisible(!HasEnded());
         }
@@ -129,6 +148,7 @@ namespace DimaD2
         private void HandleSessionEnded()
         {
             paused = false;
+            Time.timeScale = 1f;
             SetPausePanelVisible(false);
             SetPauseButtonVisible(false);
         }
